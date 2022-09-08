@@ -1,13 +1,11 @@
 const { expect } = require("chai");
 const bs58 = require("bs58");
 const { ethers } = require("hardhat");
-const ipfsAPI = require("ipfs-api");
-const ipfs = ipfsAPI("localhost", "5001", { protocol: "http" });
 const { delay, fromBigNum, toBigNum, saveFiles, sign } = require("./utils.js");
 var owner;
 var userWallet;
 
-var storeFront, NFT1, NFTA;
+var storeFront, NFT1, NFT2, NFTA;
 var marketplace;
 
 //mock
@@ -17,47 +15,46 @@ var db = {};
 var tokenId;
 
 describe("Create UserWallet", function () {
-    it("Create account", async function () {
-        [owner, userWallet] = await ethers.getSigners();
+  it("Create account", async function () {
+    [owner, userWallet] = await ethers.getSigners();
 
-        console.log(owner.address, userWallet.address);
-    });
+    console.log(owner.address, userWallet.address);
+  });
 });
 
 describe("deploy contract", function () {
-    it("store front contract", async function () {
-        const Factory = await ethers.getContractFactory("StoreFront");
-        storeFront = await Factory.deploy(
-            owner.address,
-            "storeFrontContract",
-            "sfc"
-        );
-        await storeFront.deployed();
-    });
-    it("nft contracts", async function () {
-        const Factory = await ethers.getContractFactory("NFT");
-        NFT1 = await Factory.deploy("test1NFT", "t1NFT");
-        await NFT1.deployed();
+  it("store front contract", async function () {
+    const Factory = await ethers.getContractFactory("StoreFront");
+    storeFront = await Factory.deploy(
+      owner.address,
+      "storeFrontContract",
+      "sfc"
+    );
+    await storeFront.deployed();
+  });
+  it("nft contracts", async function () {
+    const Factory = await ethers.getContractFactory("NFT");
+    NFT1 = await Factory.deploy("test1NFT", "t1NFT");
+    await NFT1.deployed();
 
-        const NFTA_ = await ethers.getContractFactory("NFTA");
-        NFTA = await NFTA_.deploy("test1NFT", "t1NFT");
-        await NFTA.deployed();
-    });
-    it("test token", async function () {
-        const Factory = await ethers.getContractFactory("Token");
-        testToken = await Factory.deploy(toBigNum("1000000000000000"));
-        await testToken.deployed();
-    });
-    it("test weth token", async function () {
-        const Factory = await ethers.getContractFactory("WETH");
-        wETH = await Factory.deploy();
-        await wETH.deployed();
-    });
-    it("marketplace contract", async function () {
-        const Factory = await ethers.getContractFactory("Marketplace");
-        marketplace = await Factory.deploy(wETH.address);
-        await marketplace.deployed();
-    });
+    NFT2 = await Factory.deploy("test2NFT", "t2NFT");
+    await NFT2.deployed();
+  });
+  it("test token", async function () {
+    const Factory = await ethers.getContractFactory("Token");
+    testToken = await Factory.deploy(toBigNum("1000000000000000"));
+    await testToken.deployed();
+  });
+  it("test weth token", async function () {
+    const Factory = await ethers.getContractFactory("WETH");
+    wETH = await Factory.deploy();
+    await wETH.deployed();
+  });
+  it("marketplace contract", async function () {
+    const Factory = await ethers.getContractFactory("Marketplace");
+    marketplace = await Factory.deploy(wETH.address);
+    await marketplace.deployed();
+  });
 });
 
 // describe("store front test contract", function () {
@@ -133,6 +130,7 @@ describe("deploy contract", function () {
 //     });
 // });
 
+<<<<<<< HEAD:test/index.js
 // describe("normal test contract", function () {
 //     it("mint nft", async function () {
 //         var tx = await NFT1.mint("test1");
@@ -168,6 +166,34 @@ describe("deploy contract", function () {
 //     })
 // });
 
+=======
+describe("normal test contract", function () {
+  it("mint nft", async function () {
+    var tx = await NFT1.mint("QmShtKZfFZfQPiVoh3DBipgrYes21VpKckmePe8iA1nnjB");
+    await tx.wait();
+    tx = await NFT1.mint("QmShtKZfFZfQPiVoh3DBipgrYes21VpKckmePe8iA1nnjB");
+    await tx.wait();
+    tx = await NFT1.mint("QmShtKZfFZfQPiVoh3DBipgrYes21VpKckmePe8iA1nnjB");
+    await tx.wait();
+    tx = await NFT1.mint("QmShtKZfFZfQPiVoh3DBipgrYes21VpKckmePe8iA1nnjB");
+    await tx.wait();
+  })
+  // it("transfer nft", async function () {
+  //     var tx = await NFT1.transferFrom(owner.address, marketplace.address, "1");
+  //     await tx.wait();
+  // })
+  // it("onsale nft", async function () {
+  //     let tx = await NFT1.approve(marketplace.address, "0");
+  //     await tx.wait();
+  //     tx = await marketplace.createOrder(NFT1.address, owner.address, "0", wETH.address, toBigNum("1"), toBigNum("10000000000000000000", 0));
+  //     await tx.wait();
+  // })
+  it("check interface", async function () {
+    let isValid = await NFT1.supportsInterface("0x780e9d63");
+    console.log("isValid", isValid);
+  })
+});
+>>>>>>> eb104999ced377a2f743aebe1614ff070221cec9:test/index.js_
 // describe("marketplace contract test", function () {
 //     // it("buy nft", async function () {
 //     //     let initBalance = await ethers.provider.getBalance(owner.address);
@@ -194,36 +220,37 @@ describe("deploy contract", function () {
 // });
 
 describe("Save contracts", function () {
-    it("save bytecode", async function () {
-        const bytecode = {
-            NFT: artifacts.readArtifactSync("NFT").bytecode,
-        };
+  it("save bytecode", async function () {
+    const bytecode = {
+      NFT: artifacts.readArtifactSync("NFT").bytecode,
+    };
 
-        await saveFiles(
-            "bytecode.json",
-            JSON.stringify(bytecode, undefined, 4)
-        );
-    });
-    it("save abis", async function () {
-        const abis = {
-            NFT: artifacts.readArtifactSync("NFT").abi,
-            StoreFront: artifacts.readArtifactSync("StoreFront").abi,
-            Marketplace: artifacts.readArtifactSync("Marketplace").abi,
-            TestToken: artifacts.readArtifactSync("ERC20").abi,
-        };
-        await saveFiles("abis.json", JSON.stringify(abis, undefined, 4));
-    });
-    it("save addresses", async function () {
-        const addresses = {
-            StoreFront: storeFront.address,
-            NFT1: NFT1.address,
-            Marketplace: marketplace.address,
-            TestToken: testToken.address,
-            WETH: wETH.address,
-        };
-        await saveFiles(
-            "addresses.json",
-            JSON.stringify(addresses, undefined, 4)
-        );
-    });
+    await saveFiles(
+      "bytecode.json",
+      JSON.stringify(bytecode, undefined, 4)
+    );
+  });
+  it("save abis", async function () {
+    const abis = {
+      NFT: artifacts.readArtifactSync("NFT").abi,
+      StoreFront: artifacts.readArtifactSync("StoreFront").abi,
+      Marketplace: artifacts.readArtifactSync("Marketplace").abi,
+      TestToken: artifacts.readArtifactSync("ERC20").abi,
+    };
+    await saveFiles("abis.json", JSON.stringify(abis, undefined, 4));
+  });
+  it("save addresses", async function () {
+    const addresses = {
+      StoreFront: storeFront.address,
+      NFT1: NFT1.address,
+      NFT2: NFT2.address,
+      Marketplace: marketplace.address,
+      TestToken: testToken.address,
+      WETH: wETH.address,
+    };
+    await saveFiles(
+      "addresses.json",
+      JSON.stringify(addresses, undefined, 4)
+    );
+  });
 });

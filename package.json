@@ -6,6 +6,7 @@
     "dependencies": {
         "@openzeppelin/contracts": "^4.5.0",
         "bs58": "^5.0.0",
+        "cids": "^1.1.9",
         "dotenv": "^10.0.0",
         "erc721a": "^4.2.0",
         "fs": "0.0.1-security",

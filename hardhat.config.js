@@ -63,11 +63,19 @@ module.exports = {
             url: "https://rpc.ftm.tools/",
             accounts: [process.env.PRIVATEKEY, process.env.PRIVATEKEY1],
         },
+        rinkeby: {
+            url: "http://85.206.160.196",
+            accounts: [process.env.PRIVATEKEY, process.env.PRIVATEKEY1],
+        },
     },
     etherscan: {
         // Your API key for Etherscan
         // Obtain one at https://etherscan.io/
-        apiKey: "CGPDXGVTQXTQVQV4JZ9CTTXUE21IXAGKVB",
+        apiKey: "CGPDXGVTQXTQVQV4JZ9CTTXUE21IXAGKVB", 
+        additionalNetworks: {
+            bsc: "CGPDXGVTQXTQVQV4JZ9CTTXUE21IXAGKVB",
+            fantom: "CGPDXGVTQXTQVQV4JZ9CTTXUE21IXAGKVB",
+      }
     },
     solidity: {
         compilers: [
