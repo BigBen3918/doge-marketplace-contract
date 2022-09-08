@@ -36,6 +36,11 @@ contract Marketplace is Ownable, Pausable, FeeManager, IMarketplace {
         acceptedTokens.push(_weth);
     }
 
+    function setWETH(address _weth) public onlyOwner {
+        weth = _weth;
+        acceptedTokens.push(_weth);
+    }
+
     function addAcceptedToken(address _acceptedToken) public onlyOwner {
         acceptedTokens.push(_acceptedToken);
     }
